@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// RPG theme colors
+				rpg: {
+					'primary': '#4A3F81',
+					'secondary': '#2C2A4A',
+					'tertiary': '#4C5C8A',
+					'accent': '#FFD700',
+					'dark': '#1A1832',
+					'light': '#8F8AC3',
 				}
 			},
 			borderRadius: {
@@ -84,11 +94,30 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': { 
+						boxShadow: '0 0 8px 2px rgba(255, 215, 0, 0.3)' 
+					},
+					'50%': { 
+						boxShadow: '0 0 18px 4px rgba(255, 215, 0, 0.6)' 
+					},
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' },
+				},
+				'progress-fill': {
+					'0%': { width: '0%' },
+					'100%': { width: 'var(--progress-width, 100%)' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-glow': 'pulse-glow 2s infinite',
+				'float': 'float 3s ease-in-out infinite',
+				'progress-fill': 'progress-fill 1s ease-out forwards',
 			}
 		}
 	},
