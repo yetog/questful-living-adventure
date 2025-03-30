@@ -1,6 +1,6 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Character, CharacterClass, Quest, Skill, SkillCategory } from '@/types/rpg';
+import { format, isAfter, isBefore, addDays, addWeeks, parseISO } from 'date-fns';
 
 interface CharacterContextType {
   character: Character | null;
@@ -10,6 +10,9 @@ interface CharacterContextType {
   completeQuest: (questId: string) => void;
   addQuest: (quest: Omit<Quest, 'id'>) => void;
   levelUpSkill: (skillId: string) => void;
+  resetDailyQuests: () => void;
+  resetWeeklyQuests: () => void;
+  checkQuestDeadlines: () => void;
 }
 
 const CharacterContext = createContext<CharacterContextType | undefined>(undefined);
@@ -141,7 +144,9 @@ const initialQuests: Quest[] = [
 const STORAGE_KEYS = {
   CHARACTER: 'life-rpg-character',
   QUESTS: 'life-rpg-quests',
-  SKILLS: 'life-rpg-skills'
+  SKILLS: 'life-rpg-skills',
+  LAST_DAILY_RESET: 'life-rpg-last-daily-reset',
+  LAST_WEEKLY_RESET: 'life-rpg-last-weekly-reset'
 };
 
 // Helper function to get data from local storage
@@ -176,6 +181,14 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
   const [skills, setSkills] = useState<Skill[]>(() => 
     getFromStorage<Skill[]>(STORAGE_KEYS.SKILLS, initialSkills)
   );
+  
+  const [lastDailyReset, setLastDailyReset] = useState<string>(() => 
+    getFromStorage<string>(STORAGE_KEYS.LAST_DAILY_RESET, format(new Date(), 'yyyy-MM-dd'))
+  );
+  
+  const [lastWeeklyReset, setLastWeeklyReset] = useState<string>(() => 
+    getFromStorage<string>(STORAGE_KEYS.LAST_WEEKLY_RESET, format(new Date(), 'yyyy-MM-dd'))
+  );
 
   // Save data to local storage whenever it changes
   useEffect(() => {
@@ -191,6 +204,36 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     saveToStorage(STORAGE_KEYS.SKILLS, skills);
   }, [skills]);
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.LAST_DAILY_RESET, lastDailyReset);
+  }, [lastDailyReset]);
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.LAST_WEEKLY_RESET, lastWeeklyReset);
+  }, [lastWeeklyReset]);
+
+  useEffect(() => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    
+    // Check for daily reset
+    if (lastDailyReset !== today) {
+      resetDailyQuests();
+      setLastDailyReset(today);
+    }
+    
+    // Check for weekly reset (if it's been a week since last reset)
+    const lastWeeklyDate = parseISO(lastWeeklyReset);
+    const oneWeekLater = addWeeks(lastWeeklyDate, 1);
+    
+    if (isAfter(new Date(), oneWeekLater)) {
+      resetWeeklyQuests();
+      setLastWeeklyReset(today);
+    }
+    
+    // Check quest deadlines
+    checkQuestDeadlines();
+  }, []);
 
   const calculateXpForLevel = (level: number) => {
     return 100 * Math.pow(1.5, level - 1);
@@ -246,12 +289,16 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
       coins: character.coins + coinReward
     });
     
-    // Update skill XP
+    // Update skill XP and auto level-up if enough XP
+    updateSkillProgress(skillCategory, xpReward);
+  };
+  
+  const updateSkillProgress = (skillCategory: SkillCategory, xpAmount: number) => {
     setSkills(skills.map(skill => {
       if (skill.category === skillCategory) {
-        const newSkillXp = skill.currentXp + xpReward;
+        const newSkillXp = skill.currentXp + xpAmount;
         
-        // Check for skill level up
+        // Auto level up the skill if enough XP
         if (newSkillXp >= skill.xpRequired && skill.level < skill.maxLevel) {
           return {
             ...skill,
@@ -295,6 +342,60 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
+  const resetDailyQuests = () => {
+    setQuests(quests.map(quest => 
+      quest.frequency === 'Daily' ? { ...quest, completed: false } : quest
+    ));
+  };
+
+  const resetWeeklyQuests = () => {
+    setQuests(quests.map(quest => 
+      quest.frequency === 'Weekly' ? { ...quest, completed: false } : quest
+    ));
+  };
+
+  const checkQuestDeadlines = () => {
+    const today = new Date();
+    
+    setQuests(quests.map(quest => {
+      // Skip if no due date or already completed
+      if (!quest.dueDate || quest.completed) return quest;
+      
+      const dueDate = parseISO(quest.dueDate);
+      
+      // If past due date and not completed, apply penalty
+      if (isBefore(dueDate, today) && !quest.completed) {
+        // Apply HP penalty if character exists
+        if (character) {
+          const hpPenalty = quest.difficulty === 'Easy' ? 5 : 
+                            quest.difficulty === 'Medium' ? 10 : 
+                            quest.difficulty === 'Hard' ? 15 : 20;
+          
+          const newHp = Math.max(0, character.hp - hpPenalty);
+          
+          setCharacter({
+            ...character,
+            hp: newHp
+          });
+        }
+        
+        // For one-time quests, mark as failed
+        if (quest.frequency === 'OneTime') {
+          return { ...quest, completed: true };
+        }
+        
+        // For recurring quests, just reset and update due date
+        const newDueDate = quest.frequency === 'Daily' 
+          ? format(addDays(today, 1), 'yyyy-MM-dd')
+          : format(addWeeks(today, 1), 'yyyy-MM-dd');
+          
+        return { ...quest, dueDate: newDueDate };
+      }
+      
+      return quest;
+    }));
+  };
+
   return (
     <CharacterContext.Provider 
       value={{ 
@@ -304,7 +405,10 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
         createCharacter,
         completeQuest,
         addQuest,
-        levelUpSkill
+        levelUpSkill,
+        resetDailyQuests,
+        resetWeeklyQuests,
+        checkQuestDeadlines
       }}
     >
       {children}
