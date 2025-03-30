@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useCharacter } from "@/context/CharacterContext";
 import { toast } from "@/components/ui/use-toast";
 import { Switch } from "@/components/ui/switch";
+import CharacterSettings from "@/components/settings/CharacterSettings";
+import GameSettings from "@/components/settings/GameSettings";
 
 const SettingsPage: React.FC = () => {
   const { character } = useCharacter();
@@ -80,78 +82,19 @@ const SettingsPage: React.FC = () => {
       <div className="rpg-card">
         <h3 className="text-xl font-bold text-white mb-4">Character Settings</h3>
         
-        <div className="space-y-4">
-          <div>
-            <label className="block text-rpg-accent font-rpg mb-1">
-              Character Name
-            </label>
-            <input
-              type="text"
-              value={character.name}
-              disabled
-              className="w-full p-2 bg-rpg-dark border border-rpg-light/30 rounded-md text-white"
-            />
-            <p className="text-xs text-rpg-light mt-1">Character name cannot be changed</p>
-          </div>
-          
-          <div>
-            <label className="block text-rpg-accent font-rpg mb-1">
-              Character Class
-            </label>
-            <input
-              type="text"
-              value={character.class}
-              disabled
-              className="w-full p-2 bg-rpg-dark border border-rpg-light/30 rounded-md text-white"
-            />
-            <p className="text-xs text-rpg-light mt-1">Character class cannot be changed</p>
-          </div>
-        </div>
+        <CharacterSettings character={character} />
         
         <div className="mt-8">
           <h4 className="text-lg font-medium text-white mb-2">Game Settings</h4>
           
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Dark Mode</div>
-                <div className="text-sm text-rpg-light">Enable dark mode theme</div>
-              </div>
-              <Switch
-                checked={darkMode}
-                onCheckedChange={handleDarkModeToggle}
-                className="bg-rpg-dark data-[state=checked]:bg-rpg-accent"
-              />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">Notifications</div>
-                <div className="text-sm text-rpg-light">Receive quest reminders</div>
-              </div>
-              <Switch
-                checked={notifications}
-                onCheckedChange={handleNotificationsToggle}
-                className="bg-rpg-dark data-[state=checked]:bg-rpg-accent"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-rpg-accent font-rpg mb-1">
-                HP Loss Rate
-              </label>
-              <select
-                className="w-full p-2 bg-rpg-dark border border-rpg-light/30 rounded-md text-white focus:border-rpg-accent/70 focus:outline-none"
-                value={hpLossRate}
-                onChange={handleHpLossRateChange}
-              >
-                <option value="low">Low (5 HP per missed daily)</option>
-                <option value="medium">Medium (10 HP per missed daily)</option>
-                <option value="high">High (20 HP per missed daily)</option>
-              </select>
-              <p className="text-xs text-rpg-light mt-1">How much HP you lose when missing daily quests</p>
-            </div>
-          </div>
+          <GameSettings 
+            darkMode={darkMode} 
+            notifications={notifications}
+            hpLossRate={hpLossRate}
+            onDarkModeToggle={handleDarkModeToggle}
+            onNotificationsToggle={handleNotificationsToggle}
+            onHpLossRateChange={handleHpLossRateChange}
+          />
         </div>
         
         <div className="mt-8 flex justify-end">
