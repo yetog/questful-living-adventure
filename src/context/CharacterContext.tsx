@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Character, CharacterClass, Quest, Skill, SkillCategory } from '@/types/rpg';
 
 interface CharacterContextType {
@@ -137,10 +137,60 @@ const initialQuests: Quest[] = [
   }
 ];
 
+// Local storage keys
+const STORAGE_KEYS = {
+  CHARACTER: 'life-rpg-character',
+  QUESTS: 'life-rpg-quests',
+  SKILLS: 'life-rpg-skills'
+};
+
+// Helper function to get data from local storage
+const getFromStorage = <T,>(key: string, defaultValue: T): T => {
+  try {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : defaultValue;
+  } catch (error) {
+    console.error(`Error retrieving ${key} from local storage:`, error);
+    return defaultValue;
+  }
+};
+
+// Helper function to save data to local storage
+const saveToStorage = <T,>(key: string, value: T): void => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error(`Error saving ${key} to local storage:`, error);
+  }
+};
+
 export const CharacterProvider = ({ children }: { children: ReactNode }) => {
-  const [character, setCharacter] = useState<Character | null>(null);
-  const [quests, setQuests] = useState<Quest[]>(initialQuests);
-  const [skills, setSkills] = useState<Skill[]>(initialSkills);
+  const [character, setCharacter] = useState<Character | null>(() => 
+    getFromStorage<Character | null>(STORAGE_KEYS.CHARACTER, null)
+  );
+  
+  const [quests, setQuests] = useState<Quest[]>(() => 
+    getFromStorage<Quest[]>(STORAGE_KEYS.QUESTS, initialQuests)
+  );
+  
+  const [skills, setSkills] = useState<Skill[]>(() => 
+    getFromStorage<Skill[]>(STORAGE_KEYS.SKILLS, initialSkills)
+  );
+
+  // Save data to local storage whenever it changes
+  useEffect(() => {
+    if (character) {
+      saveToStorage(STORAGE_KEYS.CHARACTER, character);
+    }
+  }, [character]);
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.QUESTS, quests);
+  }, [quests]);
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.SKILLS, skills);
+  }, [skills]);
 
   const calculateXpForLevel = (level: number) => {
     return 100 * Math.pow(1.5, level - 1);
