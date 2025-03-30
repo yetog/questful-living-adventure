@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -57,24 +57,24 @@
     --popover: 252 21% 20%;
     --popover-foreground: 247 49% 94%;
 
-    --primary: 252 39% 38%;
+    --primary: 260 60% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 252 21% 24%;
+    --secondary: 240 30% 25%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 252 15% 33%;
     --muted-foreground: 247 27% 75%;
 
-    --accent: 45 100% 50%;
+    --accent: 190 80% 65%;
     --accent-foreground: 252 21% 24%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 252 15% 33%;
+    --border: 240 20% 33%;
     --input: 252 15% 33%;
-    --ring: 252 39% 38%;
+    --ring: 260 60% 55%;
   }
 }
 
@@ -86,44 +86,49 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Space Grotesk', sans-serif;
     background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%234a3f81' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Cinzel', serif;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
 
   .font-rpg {
-    font-family: 'MedievalSharp', cursive;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.025em;
   }
 }
 
 @layer components {
   .rpg-border {
-    @apply border-2 border-rpg-accent/70 rounded-md bg-gradient-to-b from-rpg-secondary/50 to-rpg-primary/70 shadow-md;
+    @apply border border-accent/70 rounded-md bg-gradient-to-br from-secondary/80 to-primary/70 shadow-md backdrop-blur-sm;
   }
 
   .rpg-card {
-    @apply bg-gradient-to-b from-rpg-secondary/80 to-rpg-primary/90 border-2 border-rpg-accent/60 rounded-lg shadow-lg p-4;
+    @apply bg-gradient-to-br from-secondary/90 to-primary/90 border border-accent/40 rounded-lg shadow-lg p-4 backdrop-blur-sm;
   }
 
   .status-bar {
-    @apply h-4 rounded-full overflow-hidden bg-gray-700/50 border border-rpg-accent/30;
+    @apply h-3 rounded-full overflow-hidden bg-gray-800/60 border border-accent/20 backdrop-blur-sm;
   }
 
   .status-bar-fill {
-    @apply h-full rounded-full transition-all duration-500;
+    @apply h-full rounded-full transition-all duration-500 bg-gradient-to-r relative;
   }
 
   .hp-fill {
-    @apply bg-gradient-to-r from-red-600 to-red-400;
+    @apply from-red-600 to-red-400 after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:to-white/20 after:opacity-70;
   }
 
   .xp-fill {
-    @apply bg-gradient-to-r from-blue-600 to-blue-400;
+    @apply from-blue-500 to-cyan-400 after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:to-white/20 after:opacity-70;
   }
 
   .mp-fill {
-    @apply bg-gradient-to-r from-purple-600 to-purple-400;
+    @apply from-violet-600 to-purple-400 after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:to-white/20 after:opacity-70;
   }
 }
+

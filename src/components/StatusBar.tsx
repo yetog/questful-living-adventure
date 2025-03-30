@@ -35,15 +35,24 @@ const StatusBar = ({
 
   return (
     <div className={cn("w-full space-y-1", className)}>
-      {label && <div className="text-sm font-rpg text-rpg-accent/90">{label}</div>}
+      {label && (
+        <div className="flex justify-between items-center">
+          <div className="text-xs font-medium tracking-wide text-accent/90 uppercase">{label}</div>
+          {showText && (
+            <div className="text-xs font-medium tabular-nums">
+              {current} / {max}
+            </div>
+          )}
+        </div>
+      )}
       <div className="status-bar">
         <div
           className={cn("status-bar-fill", getFillClass())}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      {showText && (
-        <div className="text-xs text-right font-rpg">
+      {!label && showText && (
+        <div className="text-xs text-right font-medium tabular-nums">
           {current} / {max}
         </div>
       )}
