@@ -6,13 +6,15 @@ import QuestList from "@/components/QuestList";
 import SkillTree from "@/components/SkillTree";
 import { Plus } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface DashboardProps {
-  onAddQuestClick: () => void;
+  onAddQuestClick?: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onAddQuestClick }) => {
   const { character, quests, skills, completeQuest, levelUpSkill } = useCharacter();
+  const navigate = useNavigate();
 
   if (!character) return null;
 
@@ -34,6 +36,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onAddQuestClick }) => {
     });
   };
 
+  const handleAddQuest = () => {
+    if (onAddQuestClick) {
+      onAddQuestClick();
+    } else {
+      // Navigate to the quests page if no callback is provided
+      navigate('/quests');
+    }
+  };
+
   return (
     <div className="container max-w-7xl mx-auto px-4 pb-16">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -44,7 +55,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onAddQuestClick }) => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-white">Top Skills</h3>
               <button
-                onClick={() => {}}
+                onClick={() => navigate('/skills')}
                 className="text-sm text-rpg-accent hover:underline"
               >
                 View All
@@ -70,7 +81,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onAddQuestClick }) => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-white">Active Quests</h3>
               <button
-                onClick={onAddQuestClick}
+                onClick={handleAddQuest}
                 className="px-3 py-1.5 bg-rpg-accent/20 text-rpg-accent rounded-md hover:bg-rpg-accent/30 transition-colors flex items-center gap-1"
               >
                 <Plus size={16} /> Add Quest
@@ -126,7 +137,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onAddQuestClick }) => {
               <div className="text-center py-10">
                 <p className="text-rpg-light">No active quests</p>
                 <button
-                  onClick={onAddQuestClick}
+                  onClick={handleAddQuest}
                   className="mt-4 px-4 py-2 bg-rpg-accent/20 text-rpg-accent rounded-md hover:bg-rpg-accent/30 transition-colors"
                 >
                   Create Your First Quest
