@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import QuestList from "@/components/QuestList";
 import AddQuestForm from "@/components/AddQuestForm";
 import { useCharacter } from "@/context/CharacterContext";
@@ -7,9 +7,18 @@ import { Plus } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Quest } from "@/types/rpg";
 
-const QuestsPage: React.FC = () => {
+interface QuestsPageProps {
+  showAddForm?: boolean;
+}
+
+const QuestsPage: React.FC<QuestsPageProps> = ({ showAddForm: initialShowAddForm = false }) => {
   const { quests, completeQuest, addQuest } = useCharacter();
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(initialShowAddForm);
+  
+  // If the parent component sets showAddForm to true, update our local state
+  useEffect(() => {
+    setShowAddForm(initialShowAddForm);
+  }, [initialShowAddForm]);
 
   const handleCompleteQuest = (id: string) => {
     completeQuest(id);

@@ -12,7 +12,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
   return (
     <div className="rpg-card relative overflow-hidden">
       <div className="absolute top-0 right-0 bg-rpg-dark/50 px-3 py-1 rounded-bl-md border-b border-l border-rpg-accent/30">
-        <div className="text-rpg-accent font-rpg flex items-center gap-1">
+        <div className="text-rpg-accent font-rpg flex items-center gap-1 character-level">
           <Shield size={14} className="text-rpg-accent" />
           <span>Level {character.level}</span>
         </div>

@@ -1,66 +1,26 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useCharacter } from "@/context/CharacterContext";
+import { useSettings } from "@/context/SettingsContext";
 import { toast } from "@/components/ui/use-toast";
-import { Switch } from "@/components/ui/switch";
 import CharacterSettings from "@/components/settings/CharacterSettings";
 import GameSettings from "@/components/settings/GameSettings";
 
 const SettingsPage: React.FC = () => {
   const { character } = useCharacter();
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('rpg-dark-mode') === 'true';
-    } catch {
-      return true; // Default to dark mode
-    }
-  });
-  
-  const [notifications, setNotifications] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('rpg-notifications') === 'true';
-    } catch {
-      return false; // Default to no notifications
-    }
-  });
-  
-  const [hpLossRate, setHpLossRate] = useState<string>(() => {
-    try {
-      return localStorage.getItem('rpg-hp-loss-rate') || 'medium';
-    } catch {
-      return 'medium'; // Default to medium
-    }
-  });
+  const {
+    darkMode,
+    notifications,
+    hpLossRate,
+    toggleDarkMode,
+    toggleNotifications,
+    setHpLossRate,
+  } = useSettings();
 
   if (!character) return null;
   
-  const handleDarkModeToggle = (checked: boolean) => {
-    setDarkMode(checked);
-    localStorage.setItem('rpg-dark-mode', checked.toString());
-    
-    // If we had theme implementation, we would update it here
-    
-    toast({
-      title: "Settings Updated",
-      description: `Dark mode ${checked ? 'enabled' : 'disabled'}.`,
-    });
-  };
-  
-  const handleNotificationsToggle = (checked: boolean) => {
-    setNotifications(checked);
-    localStorage.setItem('rpg-notifications', checked.toString());
-    
-    // If we had notifications implementation, we would update it here
-    
-    toast({
-      title: "Settings Updated",
-      description: `Notifications ${checked ? 'enabled' : 'disabled'}.`,
-    });
-  };
-  
   const handleHpLossRateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setHpLossRate(e.target.value);
-    localStorage.setItem('rpg-hp-loss-rate', e.target.value);
+    setHpLossRate(e.target.value as 'low' | 'medium' | 'high');
     
     toast({
       title: "Settings Updated",
@@ -91,8 +51,8 @@ const SettingsPage: React.FC = () => {
             darkMode={darkMode} 
             notifications={notifications}
             hpLossRate={hpLossRate}
-            onDarkModeToggle={handleDarkModeToggle}
-            onNotificationsToggle={handleNotificationsToggle}
+            onDarkModeToggle={toggleDarkMode}
+            onNotificationsToggle={toggleNotifications}
             onHpLossRateChange={handleHpLossRateChange}
           />
         </div>

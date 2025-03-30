@@ -4,6 +4,7 @@ import { Character, CharacterClass, Quest, Skill, SkillCategory } from '@/types/
 import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/utils/storageUtils';
 import { useQuestSystem } from '@/hooks/useQuestSystem';
 import { useSkillSystem } from '@/hooks/useSkillSystem';
+import { calculateHealthRegeneration } from '@/utils/healthUtils';
 
 interface CharacterContextType {
   character: Character | null;
@@ -21,9 +22,14 @@ interface CharacterContextType {
 const CharacterContext = createContext<CharacterContextType | undefined>(undefined);
 
 export const CharacterProvider = ({ children }: { children: ReactNode }) => {
-  const [character, setCharacter] = useState<Character | null>(() => 
-    getFromStorage<Character | null>(STORAGE_KEYS.CHARACTER, null)
-  );
+  const [character, setCharacter] = useState<Character | null>(() => {
+    const storedCharacter = getFromStorage<Character | null>(STORAGE_KEYS.CHARACTER, null);
+    if (storedCharacter) {
+      // Apply health regeneration on load
+      return calculateHealthRegeneration(storedCharacter);
+    }
+    return null;
+  });
   
   // Save character data to local storage whenever it changes
   useEffect(() => {
@@ -65,6 +71,9 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
       maxHp: 100,
       coins: 0
     };
+    
+    // Set initial HP update time
+    localStorage.setItem('life-rpg-last-hp-update', new Date().toISOString());
     
     setCharacter(newCharacter);
   };

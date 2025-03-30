@@ -1,8 +1,10 @@
 
 import React from "react";
 import { Quest } from "@/types/rpg";
-import { Check, Calendar, Coins, Zap } from "lucide-react";
+import { Check, Calendar, Coins, Zap, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import DeadlineIndicator from "./DeadlineIndicator";
+import { toast } from "@/components/ui/use-toast";
 
 interface QuestItemProps {
   quest: Quest;
@@ -32,9 +34,25 @@ const QuestItem: React.FC<QuestItemProps> = ({ quest, onComplete }) => {
       case "Weekly":
         return <Calendar size={14} />;
       case "OneTime":
-        return <Calendar size={14} />;
+        return <Trophy size={14} />;
       default:
         return <Calendar size={14} />;
+    }
+  };
+  
+  const handleComplete = () => {
+    if (!quest.completed) {
+      onComplete(quest.id);
+      
+      // Show confetti animation
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti-container';
+      document.body.appendChild(confetti);
+      
+      // Remove confetti after animation
+      setTimeout(() => {
+        document.body.removeChild(confetti);
+      }, 2000);
     }
   };
 
@@ -47,7 +65,7 @@ const QuestItem: React.FC<QuestItemProps> = ({ quest, onComplete }) => {
     >
       <div className="flex items-start gap-3">
         <button 
-          onClick={() => !quest.completed && onComplete(quest.id)}
+          onClick={handleComplete}
           disabled={quest.completed}
           className={cn(
             "mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
@@ -107,6 +125,12 @@ const QuestItem: React.FC<QuestItemProps> = ({ quest, onComplete }) => {
               </div>
             </div>
           </div>
+          
+          {quest.dueDate && !quest.completed && (
+            <div className="mt-2">
+              <DeadlineIndicator dueDate={quest.dueDate} completed={quest.completed} />
+            </div>
+          )}
         </div>
       </div>
     </div>

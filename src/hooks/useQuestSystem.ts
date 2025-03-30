@@ -9,6 +9,8 @@ import {
 } from '@/utils/storageUtils';
 import { initialQuests } from '@/data/initialData';
 import { format, isAfter, isBefore, addDays, addWeeks, parseISO } from 'date-fns';
+import { applyHpLossRate } from '@/utils/healthUtils';
+import { toast } from '@/components/ui/use-toast';
 
 type UpdateSkillProgressFn = (skillCategory: SkillCategory, xpAmount: number) => void;
 type UpdateCharacterFn = (updater: (prev: Character) => Character) => void;
@@ -97,6 +99,21 @@ export const useQuestSystem = (
         newXp -= newMaxXp;
         newLevel++;
         newMaxXp = Math.floor(100 * Math.pow(1.5, newLevel - 1));
+        
+        // Show level up toast
+        toast({
+          title: "Level Up!",
+          description: `You've reached level ${newLevel}!`,
+        });
+        
+        // Add level-up animation to character level display
+        const levelElement = document.querySelector('.character-level');
+        if (levelElement) {
+          levelElement.classList.add('level-up-animation');
+          setTimeout(() => {
+            levelElement.classList.remove('level-up-animation');
+          }, 2000);
+        }
       }
       
       return {
@@ -134,6 +151,8 @@ export const useQuestSystem = (
 
   const checkQuestDeadlines = () => {
     const today = new Date();
+    let hpLost = 0;
+    let missedQuests = 0;
     
     setQuests(quests.map(quest => {
       // Skip if no due date or already completed
@@ -145,9 +164,9 @@ export const useQuestSystem = (
       if (isBefore(dueDate, today) && !quest.completed) {
         // Apply HP penalty if character exists
         if (character) {
-          const hpPenalty = quest.difficulty === 'Easy' ? 5 : 
-                            quest.difficulty === 'Medium' ? 10 : 
-                            quest.difficulty === 'Hard' ? 15 : 20;
+          const hpPenalty = applyHpLossRate(quest.difficulty);
+          hpLost += hpPenalty;
+          missedQuests++;
           
           const newHp = Math.max(0, character.hp - hpPenalty);
           
@@ -172,6 +191,15 @@ export const useQuestSystem = (
       
       return quest;
     }));
+    
+    // Show toast if HP was lost
+    if (hpLost > 0) {
+      toast({
+        title: "Quests Expired!",
+        description: `You lost ${hpLost} HP for missing ${missedQuests} quest${missedQuests > 1 ? 's' : ''}.`,
+        variant: "destructive"
+      });
+    }
   };
 
   return {

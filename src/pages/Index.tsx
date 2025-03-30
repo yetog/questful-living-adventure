@@ -1,6 +1,7 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CharacterProvider, useCharacter } from "@/context/CharacterContext";
+import { SettingsProvider } from "@/context/SettingsContext";
 import CreateCharacterForm from "@/components/CreateCharacterForm";
 import Dashboard from "@/pages/Dashboard";
 import QuestsPage from "@/pages/QuestsPage";
@@ -9,9 +10,16 @@ import SettingsPage from "@/pages/SettingsPage";
 import Navbar from "@/components/Navbar";
 
 const MainApp = () => {
-  const { character, createCharacter } = useCharacter();
+  const { character, createCharacter, checkQuestDeadlines } = useCharacter();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showAddQuest, setShowAddQuest] = useState(false);
+
+  // Check for missed quests on app load
+  useEffect(() => {
+    if (character) {
+      checkQuestDeadlines();
+    }
+  }, [character, checkQuestDeadlines]);
 
   if (!character) {
     return (
@@ -43,7 +51,7 @@ const MainApp = () => {
         {activeTab === "dashboard" && (
           <Dashboard onAddQuestClick={handleAddQuestClick} />
         )}
-        {activeTab === "quests" && <QuestsPage />}
+        {activeTab === "quests" && <QuestsPage showAddForm={showAddQuest} />}
         {activeTab === "skills" && <SkillsPage />}
         {activeTab === "settings" && <SettingsPage />}
       </div>
@@ -53,9 +61,11 @@ const MainApp = () => {
 
 const Index = () => {
   return (
-    <CharacterProvider>
-      <MainApp />
-    </CharacterProvider>
+    <SettingsProvider>
+      <CharacterProvider>
+        <MainApp />
+      </CharacterProvider>
+    </SettingsProvider>
   );
 };
 
