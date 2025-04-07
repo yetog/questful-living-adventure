@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useCharacter } from "@/context/CharacterContext";
+import { useSettings } from "@/context/SettingsContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CharacterSettings from "@/components/settings/CharacterSettings";
 import GameSettings from "@/components/settings/GameSettings";
@@ -8,6 +9,14 @@ import CharacterCustomization from "@/components/settings/CharacterCustomization
 
 const SettingsPage: React.FC = () => {
   const { character, updateCharacterAvatar } = useCharacter();
+  const { 
+    darkMode, 
+    notifications, 
+    hpLossRate, 
+    toggleDarkMode, 
+    toggleNotifications, 
+    setHpLossRate 
+  } = useSettings();
 
   if (!character) return null;
 
@@ -31,7 +40,14 @@ const SettingsPage: React.FC = () => {
           />
         </TabsContent>
         <TabsContent value="game" className="rpg-card">
-          <GameSettings />
+          <GameSettings 
+            darkMode={darkMode}
+            notifications={notifications}
+            hpLossRate={hpLossRate}
+            onDarkModeToggle={toggleDarkMode}
+            onNotificationsToggle={toggleNotifications}
+            onHpLossRateChange={(e) => setHpLossRate(e.target.value as 'low' | 'medium' | 'high')}
+          />
         </TabsContent>
       </Tabs>
     </div>
