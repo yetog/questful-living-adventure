@@ -14,7 +14,7 @@ import { getFromStorage, STORAGE_KEYS } from "@/utils/storageUtils";
 import { Character } from "@/types/rpg";
 
 const MainApp = () => {
-  const { character, createCharacter, checkQuestDeadlines } = useCharacter();
+  const { character, createCharacter, checkQuestDeadlines, loadSavedCharacter } = useCharacter();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showAddQuest, setShowAddQuest] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -38,8 +38,10 @@ const MainApp = () => {
   };
 
   const handleContinueGame = () => {
-    // The character will be loaded from localStorage by CharacterContext
-    // Just update UI state to show the main app
+    // Load the saved character from localStorage
+    if (savedCharacter) {
+      loadSavedCharacter(savedCharacter);
+    }
   };
 
   if (!character) {

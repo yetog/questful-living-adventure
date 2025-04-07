@@ -12,6 +12,7 @@ interface CharacterContextType {
   quests: Quest[];
   skills: Skill[];
   createCharacter: (name: string, characterClass: CharacterClass) => void;
+  loadSavedCharacter: (savedCharacter: Character) => void;
   completeQuest: (questId: string) => void;
   addQuest: (quest: Omit<Quest, 'id'>) => void;
   levelUpSkill: (skillId: string) => void;
@@ -83,6 +84,13 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
     
     setCharacter(newCharacter);
   };
+
+  // Load a saved character from storage
+  const loadSavedCharacter = (savedCharacter: Character) => {
+    // Apply health regeneration to ensure health is up-to-date
+    const updatedCharacter = calculateHealthRegeneration(savedCharacter);
+    setCharacter(updatedCharacter);
+  };
   
   // Character customization - update avatar
   const updateCharacterAvatar = (avatarUrl: string) => {
@@ -103,6 +111,7 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
         quests, 
         skills,
         createCharacter,
+        loadSavedCharacter,
         completeQuest,
         addQuest,
         levelUpSkill,
