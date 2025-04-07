@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Character } from "@/types/rpg";
-import { Shield, Scroll, Award, Home, Settings } from "lucide-react";
+import { Shield, Scroll, Award, Home, Settings, Trophy } from "lucide-react";
 
 interface NavbarProps {
   character: Character | null;
@@ -16,6 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ character, activeTab, onChangeTab }) =>
     { id: "dashboard", label: "Dashboard", icon: <Home size={20} /> },
     { id: "quests", label: "Quests", icon: <Scroll size={20} /> },
     { id: "skills", label: "Skills", icon: <Award size={20} /> },
+    { id: "achievements", label: "Achievements", icon: <Trophy size={20} /> },
     { id: "settings", label: "Settings", icon: <Settings size={20} /> },
   ];
 

@@ -1,0 +1,8 @@
+
+This directory contains avatar images for character customization.
+Please add appropriate avatar images for the character classes:
+- warrior.png
+- mage.png
+- rogue.png
+- ranger.png
+- bard.png

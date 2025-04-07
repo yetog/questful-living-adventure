@@ -7,6 +7,7 @@ import Dashboard from "@/pages/Dashboard";
 import QuestsPage from "@/pages/QuestsPage";
 import SkillsPage from "@/pages/SkillsPage";
 import SettingsPage from "@/pages/SettingsPage";
+import AchievementsPage from "@/pages/AchievementsPage";
 import Navbar from "@/components/Navbar";
 
 const MainApp = () => {
@@ -53,6 +54,7 @@ const MainApp = () => {
         )}
         {activeTab === "quests" && <QuestsPage showAddForm={showAddQuest} />}
         {activeTab === "skills" && <SkillsPage />}
+        {activeTab === "achievements" && <AchievementsPage />}
         {activeTab === "settings" && <SettingsPage />}
       </div>
     </div>

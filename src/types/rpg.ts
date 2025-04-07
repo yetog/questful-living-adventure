@@ -42,3 +42,17 @@ export interface Quest {
   coinReward: number;
   dueDate?: string;
 }
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+  category: 'Quest' | 'Skill' | 'Character' | 'Special';
+  dateUnlocked?: string;
+  progress?: {
+    current: number;
+    required: number;
+  };
+}

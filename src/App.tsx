@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import QuestsPage from "./pages/QuestsPage";
 import SkillsPage from "./pages/SkillsPage";
 import SettingsPage from "./pages/SettingsPage";
+import AchievementsPage from "./pages/AchievementsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard onAddQuestClick={() => {}} />} />
             <Route path="/quests" element={<QuestsPage />} />
             <Route path="/skills" element={<SkillsPage />} />
+            <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

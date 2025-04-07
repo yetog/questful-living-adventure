@@ -5,6 +5,7 @@ import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/utils/storageUtil
 import { useQuestSystem } from '@/hooks/useQuestSystem';
 import { useSkillSystem } from '@/hooks/useSkillSystem';
 import { calculateHealthRegeneration } from '@/utils/healthUtils';
+import { useHealthSystem } from '@/hooks/useHealthSystem';
 
 interface CharacterContextType {
   character: Character | null;
@@ -17,6 +18,8 @@ interface CharacterContextType {
   resetDailyQuests: () => void;
   resetWeeklyQuests: () => void;
   checkQuestDeadlines: () => void;
+  updateCharacterAvatar: (avatarUrl: string) => void;
+  applyHpLoss: (amount: number) => void;
 }
 
 const CharacterContext = createContext<CharacterContextType | undefined>(undefined);
@@ -44,6 +47,9 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
     updateSkillProgress, 
     levelUpSkill 
   } = useSkillSystem();
+
+  // Setup health system
+  const { applyHpLoss } = useHealthSystem(character, setCharacter);
 
   // Setup quest system
   const { 
@@ -77,6 +83,18 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
     
     setCharacter(newCharacter);
   };
+  
+  // Character customization - update avatar
+  const updateCharacterAvatar = (avatarUrl: string) => {
+    if (!character) return;
+    
+    const updatedCharacter = {
+      ...character,
+      avatarUrl
+    };
+    
+    setCharacter(updatedCharacter);
+  };
 
   return (
     <CharacterContext.Provider 
@@ -90,7 +108,9 @@ export const CharacterProvider = ({ children }: { children: ReactNode }) => {
         levelUpSkill,
         resetDailyQuests,
         resetWeeklyQuests,
-        checkQuestDeadlines
+        checkQuestDeadlines,
+        updateCharacterAvatar,
+        applyHpLoss
       }}
     >
       {children}
