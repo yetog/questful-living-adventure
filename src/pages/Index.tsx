@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { CharacterProvider, useCharacter } from "@/context/CharacterContext";
 import { SettingsProvider } from "@/context/SettingsContext";
