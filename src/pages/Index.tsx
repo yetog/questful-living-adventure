@@ -3,17 +3,28 @@ import React, { useState, useEffect } from "react";
 import { CharacterProvider, useCharacter } from "@/context/CharacterContext";
 import { SettingsProvider } from "@/context/SettingsContext";
 import CreateCharacterForm from "@/components/CreateCharacterForm";
+import StarterMenu from "@/components/StarterMenu";
 import Dashboard from "@/pages/Dashboard";
 import QuestsPage from "@/pages/QuestsPage";
 import SkillsPage from "@/pages/SkillsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import AchievementsPage from "@/pages/AchievementsPage";
 import Navbar from "@/components/Navbar";
+import { getFromStorage, STORAGE_KEYS } from "@/utils/storageUtils";
+import { Character } from "@/types/rpg";
 
 const MainApp = () => {
   const { character, createCharacter, checkQuestDeadlines } = useCharacter();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showAddQuest, setShowAddQuest] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [savedCharacter, setSavedCharacter] = useState<Character | null>(null);
+
+  // Check for saved character on initial load
+  useEffect(() => {
+    const storedCharacter = getFromStorage<Character | null>(STORAGE_KEYS.CHARACTER, null);
+    setSavedCharacter(storedCharacter);
+  }, []);
 
   // Check for missed quests on app load
   useEffect(() => {
@@ -22,10 +33,28 @@ const MainApp = () => {
     }
   }, [character, checkQuestDeadlines]);
 
+  const handleStartNewCharacter = () => {
+    setShowCreateForm(true);
+  };
+
+  const handleContinueGame = () => {
+    // The character will be loaded from localStorage by CharacterContext
+    // Just update UI state to show the main app
+  };
+
   if (!character) {
+    // If no active character, show the starter menu or create form
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <CreateCharacterForm onCreateCharacter={createCharacter} />
+      <div className="min-h-screen flex items-center justify-center p-4 bg-rpg-dark">
+        {showCreateForm ? (
+          <CreateCharacterForm onCreateCharacter={createCharacter} />
+        ) : (
+          <StarterMenu
+            onStartNewCharacter={handleStartNewCharacter}
+            onContinueGame={handleContinueGame}
+            savedCharacter={savedCharacter}
+          />
+        )}
       </div>
     );
   }
