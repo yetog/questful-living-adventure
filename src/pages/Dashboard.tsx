@@ -1,7 +1,7 @@
-
 import React from "react";
 import { useCharacter } from "@/context/CharacterContext";
 import CharacterCard from "@/components/CharacterCard";
+import CharacterModel from "@/components/CharacterModel";
 import QuestList from "@/components/QuestList";
 import SkillTree from "@/components/SkillTree";
 import { Plus } from "lucide-react";
@@ -47,10 +47,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onAddQuestClick }) => {
 
   return (
     <div className="container max-w-7xl mx-auto px-4 pb-16">
+      {/* Character Model - Full Width */}
+      <div className="mb-8">
+        <CharacterModel character={character} />
+      </div>
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-8">
-          <CharacterCard character={character} />
-
+          {/* Top Skills Section */}
           <div className="rpg-card">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-white">Top Skills</h3>
