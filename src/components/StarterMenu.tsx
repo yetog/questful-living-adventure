@@ -1,7 +1,8 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Character } from "@/types/rpg";
+import { getFromStorage, STORAGE_KEYS } from "@/utils/storageUtils";
 
 interface StarterMenuProps {
   onStartNewCharacter: () => void;
@@ -14,6 +15,14 @@ const StarterMenu: React.FC<StarterMenuProps> = ({
   onContinueGame,
   savedCharacter,
 }) => {
+  // Debug log to check if we have a saved character
+  useEffect(() => {
+    console.log("StarterMenu - Saved character:", savedCharacter);
+    // Double-check local storage directly
+    const directCheck = getFromStorage<Character | null>(STORAGE_KEYS.CHARACTER, null);
+    console.log("Direct storage check:", directCheck);
+  }, [savedCharacter]);
+
   return (
     <div className="flex flex-col items-center justify-center max-w-md w-full mx-auto p-6">
       <div className="text-center mb-10 animate-fade-in">

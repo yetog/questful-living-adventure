@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { CharacterProvider, useCharacter } from "@/context/CharacterContext";
 import { SettingsProvider } from "@/context/SettingsContext";
@@ -22,6 +23,7 @@ const MainApp = () => {
   // Check for saved character on initial load
   useEffect(() => {
     const storedCharacter = getFromStorage<Character | null>(STORAGE_KEYS.CHARACTER, null);
+    console.log("Stored character found:", storedCharacter);
     setSavedCharacter(storedCharacter);
   }, []);
 
