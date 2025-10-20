@@ -1,10 +1,10 @@
 
 import React from "react";
 import { Quest } from "@/types/rpg";
-import { Check, Calendar, Coins, Zap, Trophy } from "lucide-react";
+import { Check, Calendar, Coins, Zap, Trophy, Map, Scroll, Heart, Users, Activity, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import DeadlineIndicator from "./DeadlineIndicator";
-import { toast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 interface QuestItemProps {
   quest: Quest;
@@ -24,6 +24,38 @@ const QuestItem: React.FC<QuestItemProps> = ({ quest, onComplete }) => {
         return "bg-purple-600/20 text-purple-400 border-purple-500/30";
       default:
         return "bg-blue-600/20 text-blue-400 border-blue-500/30";
+    }
+  };
+
+  const categoryIcon = () => {
+    switch (quest.category) {
+      case "Main Story":
+        return <Map size={14} className="text-yellow-400" />;
+      case "Side Quest":
+        return <Scroll size={14} className="text-blue-400" />;
+      case "Personal Growth":
+        return <Heart size={14} className="text-pink-400" />;
+      case "Social":
+        return <Users size={14} className="text-purple-400" />;
+      case "Health":
+        return <Activity size={14} className="text-green-400" />;
+      default:
+        return <Scroll size={14} />;
+    }
+  };
+
+  const priorityColor = () => {
+    switch (quest.priority) {
+      case "Critical":
+        return "text-red-400 border-red-500/30";
+      case "High":
+        return "text-orange-400 border-orange-500/30";
+      case "Medium":
+        return "text-yellow-400 border-yellow-500/30";
+      case "Low":
+        return "text-gray-400 border-gray-500/30";
+      default:
+        return "text-gray-400 border-gray-500/30";
     }
   };
 
@@ -78,14 +110,28 @@ const QuestItem: React.FC<QuestItemProps> = ({ quest, onComplete }) => {
         </button>
 
         <div className="flex-1">
-          <div className="flex justify-between">
-            <h4 className={cn(
-              "font-medium text-md",
-              quest.completed && "line-through"
-            )}>
-              {quest.title}
-            </h4>
+          <div className="flex flex-col sm:flex-row justify-between gap-2">
             <div className="flex items-center gap-2">
+              <h4 className={cn(
+                "font-medium text-md",
+                quest.completed && "line-through"
+              )}>
+                {quest.title}
+              </h4>
+              <div className="flex items-center gap-1">
+                {categoryIcon()}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {quest.priority && (
+                <span className={cn(
+                  "text-xs px-2 py-0.5 rounded-full border flex items-center gap-1",
+                  priorityColor()
+                )}>
+                  <AlertCircle size={10} />
+                  {quest.priority}
+                </span>
+              )}
               <span className={cn(
                 "text-xs px-2 py-0.5 rounded-full border",
                 difficultyColor()
@@ -97,23 +143,22 @@ const QuestItem: React.FC<QuestItemProps> = ({ quest, onComplete }) => {
 
           <p className="text-sm text-muted-foreground mt-1">{quest.description}</p>
 
-          <div className="flex items-center justify-between mt-2 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 text-rpg-light">
-                {frequencyIcon()}
-                <span>{quest.frequency}</span>
-              </div>
-              <div className="flex items-center gap-1 text-rpg-light">
-                <span className="w-2 h-2 rounded-full" style={{ 
-                  backgroundColor: quest.skillCategory === 'Health' ? '#ef4444' :
-                                  quest.skillCategory === 'Finance' ? '#22c55e' :
-                                  quest.skillCategory === 'Learning' ? '#3b82f6' :
-                                  quest.skillCategory === 'Social' ? '#ec4899' :
-                                  '#f59e0b'
-                }}></span>
-                <span>{quest.skillCategory}</span>
-              </div>
-            </div>
+          <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
+            <Badge variant="outline" className="flex items-center gap-1 bg-rpg-dark/50">
+              {frequencyIcon()}
+              <span>{quest.frequency}</span>
+            </Badge>
+            <Badge variant="outline" className="flex items-center gap-1 bg-rpg-dark/50">
+              <span className="w-2 h-2 rounded-full" style={{ 
+                backgroundColor: quest.skillCategory === 'Health' ? '#ef4444' :
+                                quest.skillCategory === 'Finance' ? '#22c55e' :
+                                quest.skillCategory === 'Learning' ? '#3b82f6' :
+                                quest.skillCategory === 'Social' ? '#ec4899' :
+                                '#f59e0b'
+              }}></span>
+              <span>{quest.skillCategory}</span>
+            </Badge>
+            <div className="flex-1"></div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 text-rpg-accent">
                 <Coins size={14} />

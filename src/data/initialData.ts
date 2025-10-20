@@ -75,6 +75,8 @@ export const initialQuests: Quest[] = [
     difficulty: 'Medium',
     completed: false,
     skillCategory: 'Health',
+    category: 'Health',
+    priority: 'Medium',
     xpReward: 20,
     coinReward: 5
   },
@@ -86,6 +88,8 @@ export const initialQuests: Quest[] = [
     difficulty: 'Medium',
     completed: false,
     skillCategory: 'Learning',
+    category: 'Personal Growth',
+    priority: 'High',
     xpReward: 20,
     coinReward: 5
   },
@@ -97,6 +101,8 @@ export const initialQuests: Quest[] = [
     difficulty: 'Medium',
     completed: false,
     skillCategory: 'Finance',
+    category: 'Side Quest',
+    priority: 'Medium',
     xpReward: 30,
     coinReward: 10
   },
@@ -108,6 +114,8 @@ export const initialQuests: Quest[] = [
     difficulty: 'Medium',
     completed: false,
     skillCategory: 'Social',
+    category: 'Social',
+    priority: 'Low',
     xpReward: 25,
     coinReward: 8
   },
@@ -119,6 +127,8 @@ export const initialQuests: Quest[] = [
     difficulty: 'Medium',
     completed: false,
     skillCategory: 'Career',
+    category: 'Main Story',
+    priority: 'High',
     xpReward: 25,
     coinReward: 8
   }

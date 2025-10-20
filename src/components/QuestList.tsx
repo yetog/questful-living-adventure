@@ -2,6 +2,7 @@
 import React from "react";
 import { Quest } from "@/types/rpg";
 import QuestItem from "./QuestItem";
+import { Scroll } from "lucide-react";
 
 interface QuestListProps {
   quests: Quest[];
@@ -52,8 +53,10 @@ const QuestList: React.FC<QuestListProps> = ({ quests, onComplete }) => {
       )}
 
       {quests.length === 0 && (
-        <div className="text-center py-10">
-          <p className="text-muted-foreground">No quests available</p>
+        <div className="text-center py-12">
+          <Scroll className="mx-auto h-12 w-12 text-rpg-light/50 mb-4" />
+          <p className="text-rpg-light text-lg mb-2">No quests found</p>
+          <p className="text-muted-foreground text-sm">Try adjusting your filters or add a new quest</p>
         </div>
       )}
     </div>

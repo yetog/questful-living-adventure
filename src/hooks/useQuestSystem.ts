@@ -20,9 +20,15 @@ export const useQuestSystem = (
   updateCharacter: UpdateCharacterFn,
   character: Character | null
 ) => {
-  const [quests, setQuests] = useState<Quest[]>(() => 
-    getFromStorage<Quest[]>(STORAGE_KEYS.QUESTS, initialQuests)
-  );
+  const [quests, setQuests] = useState<Quest[]>(() => {
+    const storedQuests = getFromStorage<Quest[]>(STORAGE_KEYS.QUESTS, initialQuests);
+    // Migrate old quests to have category and priority fields
+    return storedQuests.map(quest => ({
+      ...quest,
+      category: quest.category || 'Side Quest',
+      priority: quest.priority || 'Medium'
+    }));
+  });
   
   const [lastDailyReset, setLastDailyReset] = useState<string>(() => 
     getFromStorage<string>(STORAGE_KEYS.LAST_DAILY_RESET, getTodayFormatted())

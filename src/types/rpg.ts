@@ -29,6 +29,8 @@ export interface Skill {
 
 export type QuestFrequency = 'Daily' | 'Weekly' | 'OneTime';
 export type QuestDifficulty = 'Easy' | 'Medium' | 'Hard' | 'Epic';
+export type QuestCategory = 'Main Story' | 'Side Quest' | 'Personal Growth' | 'Social' | 'Health';
+export type QuestPriority = 'Low' | 'Medium' | 'High' | 'Critical';
 
 export interface Quest {
   id: string;
@@ -38,6 +40,8 @@ export interface Quest {
   difficulty: QuestDifficulty;
   completed: boolean;
   skillCategory: SkillCategory;
+  category: QuestCategory;
+  priority?: QuestPriority;
   xpReward: number;
   coinReward: number;
   dueDate?: string;

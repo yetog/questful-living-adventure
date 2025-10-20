@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Quest, QuestDifficulty, QuestFrequency, SkillCategory } from "@/types/rpg";
+import { Quest, QuestDifficulty, QuestFrequency, SkillCategory, QuestCategory, QuestPriority } from "@/types/rpg";
 import { cn } from "@/lib/utils";
 
 interface AddQuestFormProps {
@@ -14,6 +14,8 @@ const AddQuestForm: React.FC<AddQuestFormProps> = ({ onAddQuest, onCancel }) => 
   const [frequency, setFrequency] = useState<QuestFrequency>("Daily");
   const [difficulty, setDifficulty] = useState<QuestDifficulty>("Medium");
   const [skillCategory, setSkillCategory] = useState<SkillCategory>("Health");
+  const [category, setCategory] = useState<QuestCategory>("Side Quest");
+  const [priority, setPriority] = useState<QuestPriority>("Medium");
   const [dueDate, setDueDate] = useState("");
   
   const difficultyToReward = {
@@ -33,6 +35,8 @@ const AddQuestForm: React.FC<AddQuestFormProps> = ({ onAddQuest, onCancel }) => 
       difficulty,
       completed: false,
       skillCategory,
+      category,
+      priority,
       xpReward: difficultyToReward[difficulty].xp,
       coinReward: difficultyToReward[difficulty].coins,
       dueDate: dueDate || undefined
@@ -104,6 +108,41 @@ const AddQuestForm: React.FC<AddQuestFormProps> = ({ onAddQuest, onCancel }) => 
                 <option value="Medium">Medium</option>
                 <option value="Hard">Hard</option>
                 <option value="Epic">Epic</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-rpg-accent font-rpg mb-1">
+                Quest Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as QuestCategory)}
+                className="w-full p-2 bg-rpg-dark border border-rpg-light/30 rounded-md text-white focus:border-rpg-accent/70 focus:outline-none"
+              >
+                <option value="Main Story">Main Story</option>
+                <option value="Side Quest">Side Quest</option>
+                <option value="Personal Growth">Personal Growth</option>
+                <option value="Social">Social</option>
+                <option value="Health">Health</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-rpg-accent font-rpg mb-1">
+                Priority
+              </label>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as QuestPriority)}
+                className="w-full p-2 bg-rpg-dark border border-rpg-light/30 rounded-md text-white focus:border-rpg-accent/70 focus:outline-none"
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
               </select>
             </div>
           </div>
