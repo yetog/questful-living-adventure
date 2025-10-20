@@ -9,7 +9,7 @@ import QuestsPage from "@/pages/QuestsPage";
 import SkillsPage from "@/pages/SkillsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import AchievementsPage from "@/pages/AchievementsPage";
-import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
 import { getFromStorage, STORAGE_KEYS } from "@/utils/storageUtils";
 import { Character } from "@/types/rpg";
 
@@ -74,13 +74,13 @@ const MainApp = () => {
 
   return (
     <div className="min-h-screen bg-rpg-dark">
-      <Navbar 
+      <MobileNavbar 
         character={character} 
         activeTab={activeTab} 
         onChangeTab={handleTabChange} 
       />
       
-      <div className="py-4">
+      <div className="py-2 md:py-4 px-2 md:px-0">
         {activeTab === "dashboard" && (
           <Dashboard onAddQuestClick={handleAddQuestClick} />
         )}

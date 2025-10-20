@@ -141,4 +141,26 @@
   .rpg-card {
     padding: 1rem;
   }
+  
+  /* Touch-friendly button sizes */
+  button {
+    min-height: 44px;
+  }
+  
+  /* Better mobile spacing */
+  .space-y-2 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 1.25rem;
+  }
+}
+
+/* Prevent text selection on touch devices for better UX */
+@media (hover: none) and (pointer: coarse) {
+  .prevent-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
 }
