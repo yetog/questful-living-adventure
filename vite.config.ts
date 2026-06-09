@@ -6,6 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: '/questful/',
   server: {
     host: "::",
     port: 8080,
@@ -24,7 +25,7 @@ export default defineConfig(({ mode }) => ({
         background_color: '#0a0a0a',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+        start_url: '/questful/',
         icons: [
           {
             src: '/icon-192.png',

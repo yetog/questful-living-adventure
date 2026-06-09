@@ -20,7 +20,7 @@ const App = () => (
       <div className="dark min-h-screen bg-background bg-grid-pattern bg-grid-10">
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter basename="/questful">
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/dashboard" element={<Dashboard onAddQuestClick={() => {}} />} />
